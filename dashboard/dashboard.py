@@ -31,16 +31,18 @@ import os # Pastikan sudah ada import os di bagian paling atas
 
 @st.cache_data
 def load_data():
-    # 1. Mencari lokasi file dashboard.py ini berada
     current_dir = os.path.dirname(__file__)
-    
-    # 2. Menggabungkan lokasi tadi dengan nama file CSV
-    # Ini akan menghasilkan: .../submission/dashboard/main_data.csv
     file_path = os.path.join(current_dir, "main_data.csv")
-    
-    # 3. Membaca file menggunakan jalur absolut tersebut
     df = pd.read_csv(file_path)
-    df['datetime'] = pd.to_datetime(df['datetime'])
+
+    # 1. Pastikan kolom datetime benar-benar menjadi format waktu
+    # errors='coerce' akan mengubah data yang rusak menjadi NaT (Not a Time)
+    df['datetime'] = pd.to_datetime(df['datetime'], errors='coerce')
+
+    # 2. Hapus baris yang datanya kosong di kolom datetime atau CO
+    # Ini penting agar resample tidak error saat menghitung rata-rata
+    df = df.dropna(subset=['datetime', 'CO'])
+    
     return df
 
 df = load_data()
