@@ -123,7 +123,7 @@ with col_left:
 with col_right:
     st.subheader("Tren Bulanan Kadar CO")
     # Agregasi bulanan
-    monthly_co = main_df.resample(rule='M', on='datetime').agg({"CO": "mean"}).reset_index()
+    monthly_co = df.resample(rule='ME', on='datetime').agg({"CO": "mean"}).reset_index()
     
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(
