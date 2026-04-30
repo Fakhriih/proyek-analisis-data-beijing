@@ -47,7 +47,7 @@ def load_data():
 main_df = load_data()
 
 # Gunakan resample langsung pada index (lebih stabil)
-monthly_co = main_df['CO'].resample('M').mean().reset_index()
+monthly_co = main_df['CO'].resample('ME').mean().reset_index()
 
 df = load_data()
 
