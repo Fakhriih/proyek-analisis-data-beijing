@@ -45,9 +45,9 @@ def load_data():
 
 # --- Bagian Pengolahan Data (Baris 50 ke bawah) ---
 # Gunakan 'on' di resample agar kita tidak perlu set_index
+df = load_data()
 monthly_co = df.resample(rule='ME', on='datetime').agg({"CO": "mean"}).reset_index()
 
-df = load_data()
 
 # --- SIDEBAR (Filter) ---
 with st.sidebar:
