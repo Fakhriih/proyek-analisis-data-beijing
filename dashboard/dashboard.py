@@ -35,19 +35,17 @@ def load_data():
     file_path = os.path.join(current_dir, "main_data.csv")
     df = pd.read_csv(file_path)
 
-    # Memaksa konversi ke datetime dan menangani data kosong
+    # 1. Konversi ke datetime (WAJIB)
     df['datetime'] = pd.to_datetime(df['datetime'], errors='coerce')
+    
+    # 2. Hapus data yang tidak punya tanggal (WAJIB)
     df = df.dropna(subset=['datetime'])
     
-    # Memastikan index adalah datetime agar resample lebih stabil
-    df = df.set_index('datetime')
     return df
 
-# Saat memanggil data:
-main_df = load_data()
-
-# Gunakan resample langsung pada index (lebih stabil)
-monthly_co = main_df['CO'].resample('ME').mean().reset_index()
+# --- Bagian Pengolahan Data (Baris 50 ke bawah) ---
+# Gunakan 'on' di resample agar kita tidak perlu set_index
+monthly_co = df.resample(rule='ME', on='datetime').agg({"CO": "mean"}).reset_index()
 
 df = load_data()
 
