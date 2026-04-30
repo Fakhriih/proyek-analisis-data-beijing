@@ -35,15 +35,19 @@ def load_data():
     file_path = os.path.join(current_dir, "main_data.csv")
     df = pd.read_csv(file_path)
 
-    # 1. Pastikan kolom datetime benar-benar menjadi format waktu
-    # errors='coerce' akan mengubah data yang rusak menjadi NaT (Not a Time)
+    # Memaksa konversi ke datetime dan menangani data kosong
     df['datetime'] = pd.to_datetime(df['datetime'], errors='coerce')
-
-    # 2. Hapus baris yang datanya kosong di kolom datetime atau CO
-    # Ini penting agar resample tidak error saat menghitung rata-rata
-    df = df.dropna(subset=['datetime', 'CO'])
+    df = df.dropna(subset=['datetime'])
     
+    # Memastikan index adalah datetime agar resample lebih stabil
+    df = df.set_index('datetime')
     return df
+
+# Saat memanggil data:
+main_df = load_data()
+
+# Gunakan resample langsung pada index (lebih stabil)
+monthly_co = main_df['CO'].resample('M').mean().reset_index()
 
 df = load_data()
 
